@@ -3,13 +3,12 @@
 #include <memory>
 #include "spdlog/spdlog.h"
 
-
 class Logger
 {
 public:
-	Logger();
-	static std::shared_ptr<spdlog::logger>& logger();
+	Logger(const std::string& serviceName);
+	std::shared_ptr<spdlog::logger> getLogger();
 private:
-	static std::shared_ptr<spdlog::logger> m_Logger;
+	std::shared_ptr<spdlog::logger> m_Logger;
 };
 

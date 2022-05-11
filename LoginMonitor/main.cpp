@@ -1,14 +1,11 @@
-#include <Windows.h>
-#include <list>
-#include "Service.h"
+#include "LoginMonitorService.h"
 #include "Logger.h"
-#include "ProcessManager.h"
-#include <processthreadsapi.h>
 
 
 int _tmain(int argc, TCHAR* argv[])
 {
-    Logger log;
-    Service service(L"LoginMonitor");
-    return Service::Run(service);
+    auto serviceName = L"LoginMonitor";
+    Logger log("LoginMonitorLogger");
+    LoginMonitorService service(serviceName, L"C:\\Windows\\System32\\notepad.exe");
+    return LoginMonitorService::Run(service);
 }

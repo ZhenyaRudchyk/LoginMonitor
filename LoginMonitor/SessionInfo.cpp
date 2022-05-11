@@ -3,7 +3,6 @@
 #include "SessionInfo.h"
 #include "Logger.h"
 
-
 const HANDLE SessionsInfo::SERVER = WTS_CURRENT_SERVER_HANDLE;
 
 bool SessionsInfo::GetAllSessions()
@@ -19,12 +18,10 @@ bool SessionsInfo::GetAllSessions()
 	return true;
 }
 
-
-const PWTS_SESSION_INFOA const SessionsInfo::AllSessions() const noexcept
+const PWTS_SESSION_INFOA SessionsInfo::AllSessions() const noexcept
 {
 	return m_SessionInfoArray.data;
 }
-
 
 DWORD SessionsInfo::AllSessionsCount() const noexcept
 {

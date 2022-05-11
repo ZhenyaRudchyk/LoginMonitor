@@ -1,20 +1,26 @@
 #pragma once
+
 #include <tchar.h>
-#include <string>
 #include <Windows.h>
+#include <string>
 #include <memory>
-#include "ServiceBase.h"
-#include <WtsApi32.h>
 #include <utility>
-#include <WTypesbase.h>
+#include "ServiceBase.h"
 #include "ScopeGuard.h"
 
-
-class Service
+// Bacis class for Windows Service
+class BacisService
 {
 public:
-	Service(const std::wstring& servicename);
-	static int Run(Service& service);
+	BacisService(const std::wstring& servicename);
+	virtual ~BacisService() = default;
+	static int Run(BacisService& service);
+	virtual void onStart() = 0;
+	virtual void onStop() = 0;
+	virtual void onPause() = 0;
+	virtual void onContinue() = 0;
+	virtual	void onSessionChange(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext) = 0;
+	virtual void onShutdown() = 0;
 private:
 
 	static void WINAPI ServiceMain(DWORD argc, LPTSTR* argv);
@@ -27,11 +33,11 @@ private:
 	bool Start();
 	void Pause();
 	void Continue();
-	bool Stop(DWORD exitCode = 0);
-	bool Shutdown(DWORD exitCode = 0);
+	bool Stop();
+	bool Shutdown();
 
 	// The singleton service instance.
-	static Service* s_Service;
+	static BacisService* s_Service;
 
 	std::wstring m_ServiceName;
 	SERVICE_STATUS m_ServiceStatus;

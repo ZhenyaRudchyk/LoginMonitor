@@ -1,17 +1,13 @@
-#include "ProcessManager.h"
+#include <userenv.h>
+#include "ProcessUtils.h"
 #include "ScopeGuard.h"
 #include "Logger.h"
 #include "SessionInfo.h"
-#include <userenv.h>
-#include <ntstatus.h>
-#include <wtsapi32.h>
-
 
 namespace ProcessUtils
 {
-	bool OpenProcessInSession(const DWORD sessionID, const std::string& exeName)
+	void OpenProcessInSession(const DWORD sessionID, std::wstring& exePath)
 	{
-		bool result = false;
 		do
 		{
 			ScopeGuard<HANDLE, void(*)(HANDLE&)> hImpersonationToken([](HANDLE& data) { CloseHandle(data); });
@@ -21,8 +17,6 @@ namespace ProcessUtils
 				spdlog::error("Failed to get user token. Error code: {}", GetLastError());
 				break;
 			}
-
-			Logger::logger()->info("WTSQueryUserToken successful");
 
 			if (!hImpersonationToken.data)
 			{
@@ -60,19 +54,18 @@ namespace ProcessUtils
 
 			DWORD dwCreationFlags = NORMAL_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT;
 
-			spdlog::info("Primary token was successfully created. Session ID: {}", sessionID);
-			STARTUPINFOA si;
+			STARTUPINFOW si;
 			ZeroMemory(&si, sizeof(si));
 
-			si.lpDesktop = const_cast<char*>("winsta0\\default");
+			si.lpDesktop = LPWSTR(L"winsta0\\default");
 			si.cb = sizeof(STARTUPINFO);
 
 			ScopeGuard<PROCESS_INFORMATION, void(*)(PROCESS_INFORMATION&)> pi([](PROCESS_INFORMATION& data) { CloseHandle(&data); });
 
-			if (CreateProcessAsUserA(
+			if (CreateProcessAsUserW(
 				hUserPrimaryToken.data,
-				exeName.c_str(),
 				NULL,
+				const_cast<wchar_t*>(exePath.c_str()),
 				NULL,
 				NULL,
 				FALSE,
@@ -82,27 +75,23 @@ namespace ProcessUtils
 				&si,
 				&pi.data) == NULL)
 			{
-				spdlog::error("Failed to run {}. Error code: {}", exeName, GetLastError());
+				spdlog::error(L"Failed to run {}. Error code: {}", exePath, GetLastError());
 				break;
 			}
 
-			spdlog::info("CreateProcessAsUserA successful");
-			result = true;
+			spdlog::info(L"{} was successfully started in session = {}", exePath, sessionID);
 
 		} while (false);
-
-		return result;
 	}
 
 
 
-	bool OpenProcessForAllActiveUser(const std::string& exeName)
+	void OpenProcessForAllActiveUser(std::wstring& exePath)
 	{
-
 		SessionsInfo sessionsManager;
 		if (!sessionsManager.GetAllSessions())
 		{
-			return false;
+			return;
 		}
 
 		auto Sessions = sessionsManager.AllSessions();
@@ -126,10 +115,7 @@ namespace ProcessUtils
 				continue;
 			}
 
-			ProcessUtils::OpenProcessInSession(sessionID, exeName);
-
+			ProcessUtils::OpenProcessInSession(sessionID, exePath);
 		}
-
-		return true;
 	}
 }

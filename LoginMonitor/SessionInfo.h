@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Windows.h>
 #include <WtsApi32.h>
 #include "ScopeGuard.h"
 
@@ -9,7 +8,7 @@ class SessionsInfo
 public:
 	const static HANDLE SERVER;
 	bool GetAllSessions();
-	const PWTS_SESSION_INFOA const AllSessions() const noexcept;
+	const PWTS_SESSION_INFOA AllSessions() const noexcept;
 	DWORD AllSessionsCount() const noexcept;
 private:
 	DWORD m_SessionsCount{ 0 };
