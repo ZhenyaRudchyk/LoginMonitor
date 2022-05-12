@@ -148,15 +148,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="LoginMonitorService.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ProcessManager.cpp" />
-    <ClCompile Include="Service.cpp" />
+    <ClCompile Include="ProcessUtils.cpp" />
+    <ClCompile Include="BasicService.cpp" />
     <ClCompile Include="SessionInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicService.h" />
     <ClInclude Include="Logger.h" />
-    <ClInclude Include="ProcessManager.h" />
-    <ClInclude Include="Service.h" />
+    <ClInclude Include="LoginMonitorService.h" />
+    <ClInclude Include="ProcessUtils.h" />
     <ClInclude Include="ScopeGuard.h" />
     <ClInclude Include="SessionInfo.h" />
   </ItemGroup>

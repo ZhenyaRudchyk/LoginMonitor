@@ -18,33 +18,39 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Service.cpp">
+    <ClCompile Include="BasicService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProcessManager.cpp">
+    <ClCompile Include="ProcessUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SessionInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoginMonitorService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Service.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessManager.h">
+    <ClInclude Include="ProcessUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScopeGuard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SessionInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginMonitorService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
