@@ -84,8 +84,6 @@ namespace ProcessUtils
 		} while (false);
 	}
 
-
-
 	void OpenProcessForAllActiveUser(std::wstring& exePath)
 	{
 		SessionsInfo sessionsManager;

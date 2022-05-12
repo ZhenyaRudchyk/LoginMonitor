@@ -8,7 +8,6 @@ const int SessionsInfo::VERSION = 1;
 
 bool SessionsInfo::GetAllSessions()
 {
-
 	WTSFreeMemory(m_SessionInfoArray.data);
 	if (!WTSEnumerateSessionsA(SERVER, NULL, VERSION, &m_SessionInfoArray.data, &m_SessionsCount))
 	{

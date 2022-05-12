@@ -17,8 +17,3 @@ Logger::Logger(const std::string& serviceName)
 	spdlog::register_logger(m_Logger);
 	spdlog::set_default_logger(m_Logger);
 }
-
-std::shared_ptr<spdlog::logger> Logger::getLogger()
-{
-	return m_Logger;
-}

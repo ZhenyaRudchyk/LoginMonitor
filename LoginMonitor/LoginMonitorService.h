@@ -11,9 +11,10 @@ public:
 	void onStop() override;
 	void onPause() override;
 	void onContinue() override;
-	void onSessionChange(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext) override;
+	DWORD onSessionChange(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext) override;
 	void onShutdown() override;
 private:
+	bool isPaused;
 	std::wstring m_ExePath;
 };
 

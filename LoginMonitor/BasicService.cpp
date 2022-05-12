@@ -116,7 +116,6 @@ BacisService::BacisService(const std::wstring& servicename) :
 		} while (false);
 	}
 
-
 	void BacisService::Continue()
 	{
 		SetStatusToService(SERVICE_CONTINUE_PENDING);
@@ -124,7 +123,7 @@ BacisService::BacisService(const std::wstring& servicename) :
 		onContinue();
 
 		SetStatusToService(SERVICE_RUNNING);
-		spdlog::info(L"Service {} resumed.", m_ServiceName);
+		spdlog::info(L"Service {} continued.", m_ServiceName);
 	}
 
 	void BacisService::Pause()
@@ -139,49 +138,50 @@ BacisService::BacisService(const std::wstring& servicename) :
 
 	DWORD WINAPI BacisService::ServiceCtrlHandler(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
 	{
-		DWORD Result = ERROR_CALL_NOT_IMPLEMENTED;
-
+		DWORD result = NO_ERROR;
 		switch (CtrlCode)
 		{
 			case SERVICE_CONTROL_STOP:
 			{
 				s_Service->Stop();
-				Result = NO_ERROR;
 				break;
 			}
 			case SERVICE_CONTROL_PAUSE:
 			{
 				s_Service->Pause();
-				Result = NO_ERROR;
 				break;
 			}
 
 			case SERVICE_CONTROL_CONTINUE:
 			{
 				s_Service->Continue();
-				Result = NO_ERROR;
 				break;
 			}
 
 			case SERVICE_CONTROL_SESSIONCHANGE:
 			{
-
-				s_Service->onSessionChange(CtrlCode, dwEventType, lpEventData, lpContext);
+				result = s_Service->onSessionChange(CtrlCode, dwEventType, lpEventData, lpContext);
 				break;
 			}
+
 			case SERVICE_CONTROL_SHUTDOWN:
 			{
 				s_Service->Shutdown();
-				Result = NO_ERROR;
 				break;
 			}
+
 			case SERVICE_CONTROL_INTERROGATE:
 			{
-				Result = NO_ERROR;
 				break;
 			}
+
+			default:
+			{
+				result = ERROR_CALL_NOT_IMPLEMENTED;
+			}
+
 		}
-		return Result;
+		return result;
 	}
 
 	std::string GetServiceStateString(const int serviceState)
@@ -196,15 +196,11 @@ BacisService::BacisService(const std::wstring& servicename) :
 			return "SERVICE_STOP_PENDING";
 		case SERVICE_STOPPED:
 			return "SERVICE_STOPPED";
-		default:
-			break;
 		}
 		return {};
 	}
 
-	bool  BacisService::SetStatusToService(DWORD dwCurrentState,
-		DWORD dwWin32ExitCode,
-		DWORD dwWaitHint)
+	bool BacisService::SetStatusToService(DWORD dwCurrentState, DWORD dwWin32ExitCode, DWORD dwWaitHint)
 	{
 		static DWORD dwCheckPoint = 1;
 
@@ -216,7 +212,7 @@ BacisService::BacisService(const std::wstring& servicename) :
 
 		// Report the status of the service to the SCM.
 
-		if (::SetServiceStatus(m_StatusHandle, &m_ServiceStatus) == FALSE)
+		if (SetServiceStatus(m_StatusHandle, &m_ServiceStatus) == FALSE)
 		{
 			spdlog::error("Failed to set service status {}. Error code: {}", GetServiceStateString(dwCurrentState), GetLastError());
 			return false;

@@ -19,7 +19,7 @@ public:
 	virtual void onStop() = 0;
 	virtual void onPause() = 0;
 	virtual void onContinue() = 0;
-	virtual	void onSessionChange(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext) = 0;
+	virtual	DWORD onSessionChange(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext) = 0;
 	virtual void onShutdown() = 0;
 private:
 

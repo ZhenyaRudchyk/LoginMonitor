@@ -4,6 +4,7 @@
 
 LoginMonitorService::LoginMonitorService(const std::wstring& serviceName, const std::wstring exePath): 
 	BacisService(serviceName),
+	isPaused(false),
 	m_ExePath(exePath)
 {}
 
@@ -16,46 +17,42 @@ void LoginMonitorService::onStop()
 {}
 
 void LoginMonitorService::onPause()
-{}
-
-void LoginMonitorService::onContinue()
-{}
-
-std::string GetConnectionEventString(const int serviceState)
 {
-	switch (serviceState)
-	{
-	case WTS_REMOTE_CONNECT:
-		return "WTS_REMOTE_CONNECT";
-	case WTS_SESSION_LOGON:
-		return "WTS_SESSION_LOGON";
-	}
-	return {};
+	isPaused = true;
 }
 
-void LoginMonitorService::onSessionChange(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
+void LoginMonitorService::onContinue()
 {
-	auto data = reinterpret_cast<WTSSESSION_NOTIFICATION*>(lpEventData);
-	if (!data)
-	{
-		spdlog::info("Failed to get WTSSESSION_NOTIFICATION data.");
-		return;
-	}
-
-	const DWORD sessionID = data->dwSessionId;
-
-	switch (dwEventType)
-	{
-	case WTS_REMOTE_CONNECT:
-		spdlog::info("{} event received.", GetConnectionEventString(WTS_REMOTE_CONNECT));
-		ProcessUtils::OpenProcessInSession(sessionID, m_ExePath);
-		break;
-	case WTS_SESSION_LOGON:
-		spdlog::info("{} event received.", GetConnectionEventString(WTS_SESSION_LOGON));
-		ProcessUtils::OpenProcessInSession(sessionID, m_ExePath);
-		break;
-	}
+	isPaused = false;
 }
 
 void LoginMonitorService::onShutdown()
-{}
+{
+}
+
+DWORD LoginMonitorService::onSessionChange(DWORD CtrlCode, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
+{
+	DWORD result = NO_ERROR;
+	do
+	{
+		if (isPaused)
+		{
+			break;
+		}
+
+		auto data = static_cast<WTSSESSION_NOTIFICATION*>(lpEventData);
+		if (!data)
+		{
+			spdlog::info("Failed to get WTSSESSION_NOTIFICATION data.");
+			result = ERROR_INVALID_DATA;
+		}
+
+		if (dwEventType == WTS_SESSION_LOGON)
+		{
+			spdlog::info("WTS_SESSION_LOGON event received. Session ID = {}", data->dwSessionId);
+			ProcessUtils::OpenProcessInSession(data->dwSessionId, m_ExePath);
+		}
+	} while (false);
+
+	return result;
+}
