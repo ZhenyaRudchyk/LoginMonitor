@@ -1,8 +1,9 @@
 # Login Monitor
 Login Monitor is a Windows Service which allows to open notepad.exe app in user session.
-Features:
-- open exe in all active sessions on service start
-- monitor new sessions login
+
+##### Features:
+- open notepad.exe in all active sessions on service start
+- monitor new sessions and open notepad.exe on log in
 
 ### Build
 VS 2019 and C++17
