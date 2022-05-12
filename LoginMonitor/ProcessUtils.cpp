@@ -114,6 +114,7 @@ namespace ProcessUtils
 			{
 				continue;
 			}
+			spdlog::info("Active session ID = {}", sessionID);
 
 			ProcessUtils::OpenProcessInSession(sessionID, exePath);
 		}

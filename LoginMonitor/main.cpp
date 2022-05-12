@@ -1,7 +1,6 @@
 #include "LoginMonitorService.h"
 #include "Logger.h"
 
-
 int _tmain(int argc, TCHAR* argv[])
 {
     auto serviceName = L"LoginMonitor";

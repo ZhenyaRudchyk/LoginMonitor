@@ -7,6 +7,7 @@ class SessionsInfo
 {
 public:
 	const static HANDLE SERVER;
+	const static int VERSION;
 	bool GetAllSessions();
 	const PWTS_SESSION_INFOA AllSessions() const noexcept;
 	DWORD AllSessionsCount() const noexcept;
