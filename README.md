@@ -12,3 +12,6 @@ VS 2019 and C++17
 sc create <service name> binPath=<path to exe> //install service
 sc config <service name> start=auto // automatic startup
 sc delete <service name> // delete service
+
+#### P.S.
+Tested only on Windows 10
