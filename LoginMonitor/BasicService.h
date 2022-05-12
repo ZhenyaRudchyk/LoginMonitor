@@ -5,7 +5,6 @@
 #include <string>
 #include <memory>
 #include <utility>
-#include "ServiceBase.h"
 #include "ScopeGuard.h"
 
 // Bacis class for Windows Service

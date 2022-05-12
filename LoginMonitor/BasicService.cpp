@@ -98,7 +98,7 @@ BacisService::BacisService(const std::wstring& servicename) :
 			return false;
 		}
 
-		spdlog::info(L"Service {} stoped.", m_ServiceName);
+		spdlog::info(L"Service {} stopped.", m_ServiceName);
 		return true;
 	}
 
