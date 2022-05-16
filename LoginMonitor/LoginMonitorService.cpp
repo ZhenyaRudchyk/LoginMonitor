@@ -45,6 +45,7 @@ DWORD LoginMonitorService::onSessionChange(DWORD CtrlCode, DWORD dwEventType, LP
 		{
 			spdlog::info("Failed to get WTSSESSION_NOTIFICATION data.");
 			result = ERROR_INVALID_DATA;
+			break;
 		}
 
 		if (dwEventType == WTS_SESSION_LOGON)

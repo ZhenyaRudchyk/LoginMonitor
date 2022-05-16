@@ -14,13 +14,13 @@ namespace ProcessUtils
 
 			if (WTSQueryUserToken(sessionID, &hImpersonationToken.data) == NULL)
 			{
-				spdlog::error("Failed to get user token. Error code: {}", GetLastError());
+				spdlog::error("Failed to get user token in session = {}. Error code: {}",sessionID ,GetLastError());
 				break;
 			}
 
 			if (!hImpersonationToken.data)
 			{
-				spdlog::error("Failed to retrive user token. Error code: {}", GetLastError());
+				spdlog::error("Failed to retrive user token in session = {}. Error code: {}", sessionID, GetLastError());
 				break;
 			}
 
@@ -33,13 +33,13 @@ namespace ProcessUtils
 				TokenPrimary,
 				&hUserPrimaryToken.data) == NULL)
 			{
-				spdlog::error("Failed to duplicate token. Error code:{}", GetLastError());
+				spdlog::error("Failed to duplicate token in session = {}. Error code:{}", sessionID, GetLastError());
 				break;
 			}
 
 			if (!hUserPrimaryToken.data)
 			{
-				spdlog::error("Failed to retrive  hUserToken token. Error code: {}", GetLastError());
+				spdlog::error("Failed to retrive primary token in session = {}. Error code: {}", sessionID, GetLastError());
 				break;
 			}
 
@@ -48,7 +48,7 @@ namespace ProcessUtils
 
 			if (!CreateEnvironmentBlock(&environmentBlock.data, hUserPrimaryToken.data, FALSE))
 			{
-				spdlog::error("Failed to create env block. Error code: {}", GetLastError());
+				spdlog::error("Failed to create enviroment block in session = {}. Error code: {}", sessionID, GetLastError());
 				break;
 			}
 
@@ -75,7 +75,7 @@ namespace ProcessUtils
 				&si,
 				&pi.data) == NULL)
 			{
-				spdlog::error(L"Failed to run {}. Error code: {}", exePath, GetLastError());
+				spdlog::error(L"Failed to run {} in session = {}. Error code: {}", sessionID, exePath, GetLastError());
 				break;
 			}
 
